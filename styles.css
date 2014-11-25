@@ -1,0 +1,60 @@
+body {
+    display: table;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.equation {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+    cursor: default;
+    padding-bottom: 10%;
+}
+
+.equation form, .equation input {
+    font: 40pt monospace;
+}
+
+input, [contenteditable] {
+    cursor: text;
+}
+
+.fraction, .operation {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.field:focus {
+    outline: 0;
+}
+.field {
+    padding: 4px;
+}
+.field.ng-invalid {
+    color: red;
+    background-color: rgba(255, 0, 0, 0.1);
+}
+
+.fraction .field {
+    display: block;
+    border: none;
+    text-align: center;
+    padding: 0 15px;
+    min-width: 32px;
+}
+.fraction .field:first-child {
+    border-bottom: 2px solid black;
+}
+.fraction .field:last-child {
+    border-top: 2px solid black;
+}
+
+.operation .field {
+    display: inline-block;
+    border: none;
+    width: 30px;
+}
