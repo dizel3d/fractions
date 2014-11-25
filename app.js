@@ -84,9 +84,12 @@
         };
     });
 
-    app.controller('EquationCtrl', ['$scope', 'mathService', function($scope, mathService) {
+    app.controller('EquationCtrl', ['$scope', 'mathService', '$location', function($scope, mathService, $location) {
+        var equation = [{},{}, {}];
+        try { equation = angular.fromJson($location.search()['equation']) || equation; } catch(e) { }
+
         angular.extend($scope, {
-            equation: [{},{}, {}],
+            equation: equation,
             insertFraction: function(index) {
                 this.equation.splice(index, 0, {});
             },
@@ -97,7 +100,9 @@
                 return this.equation.length > 3;
             }
         });
+
         $scope.$watch(function() {
+            $location.search('equation', angular.toJson($scope.equation));
             var result = mathService.calc($scope.equation.slice(0, $scope.equation.length - 1));
             angular.extend($scope.equation[$scope.equation.length - 1], result);
         });
