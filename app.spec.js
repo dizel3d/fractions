@@ -44,4 +44,8 @@ describe('mathService', function() {
     it('calc with bad arguments', function() {
         expect(mathService.calc([{x: 1, y: undefined}, {oper: '+', x: 1, y: 2}])).toEqual({x: NaN, y: NaN});
     });
+
+    it('minus test', function() {
+        expect(mathService.add({x: 1, y: 2}, {x: 2, y: -2})).toEqual({x: -1, y: 2});
+    })
 });

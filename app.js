@@ -67,10 +67,15 @@
 
             reduce: function(f) {
                 var d = this.gcd(f.x, f.y);
-                return {
+                var result = {
                     x: f.x / d,
                     y: f.y / d
                 };
+                var sign = result.y / Math.abs(result.y);
+                return {
+                    x: result.x * sign,
+                    y: result.y * sign
+                }
             },
 
             // Returns greatest common divisor
@@ -129,6 +134,9 @@
                 };
 
                 element.attr('contenteditable', '').bind('blur input keyup change', function() {
+                    // HACK IE contenteditable fix
+                    element.text(element.text());
+
                     scope.$apply(function() {
                         ngModel.$setViewValue(element.text());
                     });
