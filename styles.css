@@ -15,32 +15,33 @@ body {
     padding-bottom: 10%;
 }
 
-.equation form, .equation input {
-    font: 40pt monospace;
-}
-
-input, [contenteditable] {
+[contenteditable] {
     cursor: text;
 }
 
-.fraction, .operation {
+input {
+    background-color: transparent;
+}
+
+.fraction,
+.operation {
     display: inline-block;
     vertical-align: middle;
 }
 
+.field {
+    font: 40pt monospace;
+    padding: 4px;
+}
 .field:focus {
     outline: 0;
 }
-.field {
-    padding: 4px;
-}
 .field.ng-invalid {
     color: red;
-    background-color: rgba(255, 0, 0, 0.1);
+    background-color: rgb(255, 220, 220);
 }
 
 .fraction .field {
-    display: block;
     border: none;
     text-align: center;
     padding: 0 15px;
@@ -52,9 +53,49 @@ input, [contenteditable] {
 .fraction .field:last-child {
     border-top: 2px solid black;
 }
+.fraction .whole .field {
+    border: none;
+    padding: 0;
+    min-width: 0;
+}
 
 .operation .field {
-    display: inline-block;
     border: none;
     width: 30px;
+}
+
+.item {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 20px 0;
+}
+.item.editable:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+.actions {
+    margin-top: 30px;
+    opacity: 0;
+}
+.item .actions.hidden {
+    visibility: hidden !important;
+}
+.item:hover .actions {
+    opacity: 1;
+}
+
+.btn {
+    display: inline-block;
+    border: 2px solid black;
+    border-radius: 2px;
+    width: 16px;
+    height: 16px;
+}
+
+.btn:not(.disabled):hover {
+    border-color: green;
+}
+
+.btn.disabled {
+    opacity: 0.4;
 }

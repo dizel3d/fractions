@@ -1,17 +1,103 @@
 (function() {'use strict';
-    function Fraction(x, y, oper) {
-        angular.extend(this, {x: x, y: y, oper: oper});
-    }
+    var app = angular.module('app', []);
 
-    var app = angular.module('app', ['ngAnimate']);
+    // Provides fraction math functions
+    app.factory('mathService', function() {
+        return {
+            // Reverse Polish Notation implementation for fractions
+            calc: function (arr) {
+                var fStack = [arr[0]];
+                var oStack = [];
 
-    app.controller('EquationCtrl', ['$scope', function($scope) {
+                // mul, div
+                angular.forEach(arr.slice(1), function(f) {
+                    if (f.oper === '*') {
+                        fStack.push(this.mul(fStack.pop(), f));
+                    } else if (f.oper === '/') {
+                        fStack.push(this.div(fStack.pop(), f));
+                    } else {
+                        oStack.push(f.oper);
+                        fStack.push(f);
+                    }
+                }, this);
+
+                // add, sub
+                while (oStack.length) {
+                    var oper = oStack.pop();
+                    var f = fStack.pop();
+                    if (oper == '+') {
+                        fStack.push(this.add(fStack.pop(), f));
+                    } else {
+                        fStack.push(this.sub(fStack.pop(), f));
+                    }
+                }
+
+                return fStack.pop();
+            },
+
+            add: function (f1, f2) {
+                return this.reduce({
+                    x: f1.x * f2.y + f2.x * f1.y,
+                    y: f1.y * f2.y
+                });
+            },
+
+            sub: function (f1, f2) {
+                return this.reduce({
+                    x: f1.x * f2.y - f2.x * f1.y,
+                    y: f1.y * f2.y
+                });
+            },
+
+            div: function (f1, f2) {
+                return this.reduce({
+                    x: f1.x * f2.y,
+                    y: f1.y * f2.x
+                });
+            },
+
+            mul: function (f1, f2) {
+                return this.reduce({
+                    x: f1.x * f2.x,
+                    y: f1.y * f2.y
+                });
+            },
+
+            reduce: function(f) {
+                var d = this.gcd(f.x, f.y);
+                return {
+                    x: f.x / d,
+                    y: f.y / d
+                };
+            },
+
+            // Returns greatest common divisor
+            gcd: function(a, b) {
+                if (b) {
+                    return this.gcd(b, a % b);
+                } else {
+                    return Math.abs(a);
+                }
+            }
+        };
+    });
+
+    app.controller('EquationCtrl', ['$scope', 'mathService', function($scope, mathService) {
         angular.extend($scope, {
-            equation: [
-                new Fraction(1, 2),
-                new Fraction(2, 3, '+'),
-                new Fraction(2, 3, '=')
-            ]
+            equation: [{},{}, {}],
+            insertFraction: function(index) {
+                this.equation.splice(index, 0, {});
+            },
+            removeFraction: function(index) {
+                this.canRemoveFraction() && this.equation.splice(index, 1);
+            },
+            canRemoveFraction: function() {
+                return this.equation.length > 3;
+            }
+        });
+        $scope.$watch(function() {
+            var result = mathService.calc($scope.equation.slice(0, $scope.equation - 1));
+            $scope.equation[$scope.equation.length - 1] = result;
         });
     }]);
 

@@ -10,29 +10,36 @@
 </head>
 <body>
     <div class="equation">
-        <h1>Fraction Calculator</h1>
-        <form ng-controller="EquationCtrl">
-            <!-- operation -->
-            <div ng-repeat-start="item in equation" class="operation" ng-if="$index !== 0">
-                <div ng-if="$index !== (equation.length - 1)">
-                    &nbsp;<input class="field" ng-model="item.oper" required maxlength="1" ng-pattern="/^[\+\-\*\/]$/" />
+        <form ng-controller="EquationCtrl" name="equationForm">
+            <span ng-repeat="item in equation" class="item" ng-class="{editable: $index !== (equation.length - 1)}">
+                <!-- operation -->
+                <div class="operation" ng-if="$index !== 0">
+                    <div ng-if="$index !== (equation.length - 1)">
+                        &nbsp;<input class="field" ng-model="item.oper" required maxlength="1" ng-pattern="/^[\+\-\*\/]$/" />
+                    </div>
+                    <div ng-if="$index === (equation.length - 1)">
+                        &nbsp;<span class="field">=</span>
+                    </div>
                 </div>
-                <div ng-if="$index === (equation.length - 1)">
-                    &nbsp;<span class="field">=</span>
-                </div>
-            </div>
 
-            <!-- fraction -->
-            <div ng-repeat-end class="fraction">
-                <div ng-if="$index !== (equation.length - 1)">
-                    <span class="field" ng-model="item.x" number-input="^(\-?[1-9][0-9]*|0)$"></span>
-                    <span class="field" ng-model="item.y" number-input="^\-?[1-9][0-9]*$"></span>
+                <!-- fraction -->
+                <div class="fraction">
+                    <div ng-if="$index !== (equation.length - 1)">
+                        <div class="field" ng-model="item.x" number-input="^(\-?[1-9][0-9]*|0)$"></div>
+                        <div class="field" ng-model="item.y" number-input="^\-?[1-9][0-9]*$"></div>
+                    </div>
+                    <div ng-if="$index === (equation.length - 1)" ng-class="{whole: item.y === 1 || !item.y}">
+                        <div class="field">{{item.x}}</div>
+                        <div class="field" ng-hide="item.y === 1 || !item.y">{{item.y}}</div>
+                    </div>
                 </div>
-                <div ng-if="$index === (equation.length - 1)">
-                    <span class="field">{{item.x}}</span>
-                    <span class="field">{{item.y}}</span>
+
+                <!-- actions -->
+                <div class="actions" ng-class="{hidden: $index === (equation.length - 1)}">
+                    <span class="btn" ng-click="insertFraction($index + 1)" title="Добавить">+</span>
+                    <span class="btn" ng-click="removeFraction($index)" ng-class="{disabled: canRemoveFraction()}" title="Удалить">-</span>
                 </div>
-            </div>
+            </span>
 
             <!--<pre ng-bind="equation | json" style="font-size: 10pt"></pre>-->
         </form>
