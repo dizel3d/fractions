@@ -27,8 +27,10 @@
                     var f = fStack.pop();
                     if (oper == '+') {
                         fStack.push(this.add(fStack.pop(), f));
-                    } else {
+                    } else if (oper == '-') {
                         fStack.push(this.sub(fStack.pop(), f));
+                    } else {
+                        return {x: NaN, y: NaN};
                     }
                 }
 
@@ -96,8 +98,8 @@
             }
         });
         $scope.$watch(function() {
-            var result = mathService.calc($scope.equation.slice(0, $scope.equation - 1));
-            $scope.equation[$scope.equation.length - 1] = result;
+            var result = mathService.calc($scope.equation.slice(0, $scope.equation.length - 1));
+            angular.extend($scope.equation[$scope.equation.length - 1], result);
         });
     }]);
 
