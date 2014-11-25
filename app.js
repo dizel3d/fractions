@@ -126,8 +126,8 @@
                 ngModel.$parsers.unshift(function(viewValue) {
                     return parseInt(viewValue);
                 });
-                ngModel.$formatters.shift(function(viewValue) {
-                    return parseInt(viewValue);
+                ngModel.$formatters.push(function(viewValue) {
+                    return angular.isNumber(viewValue) ? viewValue.toString() : viewValue;
                 });
                 ngModel.$render = function() {
                     element.html(ngModel.$viewValue || '');
